@@ -43,7 +43,7 @@
     var card = el("article", "product", "");
     var feats = p.features.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("");
     card.innerHTML =
-      '<div class="product-step">Step ' + (i + 1) + " of 4</div>" +
+      '<div class="product-step">Step ' + (i + 1) + " of 6</div>" +
       "<h3>" + esc(p.name) + "</h3>" +
       '<p class="tagline">' + esc(p.tagline) + "</p>" +
       "<ul>" + feats + "</ul>" +
@@ -61,7 +61,7 @@
     "<p>Separately: " +
     D.PRODUCTS.map(function (p) { return esc(p.name) + " $" + p.price; }).join(" + ") +
     " = <strong>$" + total + "/mo</strong></p>" +
-    '<p>As the <strong>Trades Growth Stack</strong>: <strong>$' + D.BUNDLE_PRICE + "/mo</strong> " +
+    '<p>As the <strong>Trades Field-Ops Stack</strong>: <strong>$' + D.BUNDLE_PRICE + "/mo</strong> " +
     "— you save <strong>$" + D.bundleSavings() + "/mo</strong> and everything works as one pipeline.</p>";
 
   // --- year ---

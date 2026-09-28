@@ -1,5 +1,6 @@
 // trades-hub data — UMD: works in browser and Node (tests exercise this file).
-// 4 products forming the trades pipeline: quote -> invoice -> paid -> reviewed -> discovered.
+// 6 products forming the field-ops pipeline: quote -> materials -> permits ->
+// safety -> fleet -> site visit documentation. One stage per product, in order.
 (function (root, factory) {
   if (typeof module === "object" && module.exports) module.exports = factory();
   else root.TradesHubData = factory();
@@ -17,51 +18,73 @@
       ]
     },
     {
-      slug: "invoicepilot-ai",
-      name: "InvoicePilot AI",
-      tagline: "Invoice the job, then get paid without the awkward chase.",
+      slug: "materiallist-ai",
+      name: "MaterialList AI",
+      tagline: "Job description in, store-ready materials list out.",
       price: 19,
       features: [
-        "One-click invoices from won quotes with tax, discounts and aging dashboard",
-        "Three escalating reminder drafts — gentle, firm, final — that stay polite for you",
-        "Overdue alerts so late payers never slip through the cracks"
+        "Plain-English job description turns into a takeoff: item, quantity, unit, line total",
+        "Waste factors and a buy-as-you-go checklist, quantities auto-scaled from your sizes",
+        "Save named lists and print a checkbox checklist for the supply run"
       ]
     },
     {
-      slug: "reviewpilot-ai",
-      name: "ReviewPilot AI",
-      tagline: "Turn happy customers into 5-star reviews on autopilot.",
-      price: 29,
+      slug: "permitpilot-ai",
+      name: "PermitPilot AI",
+      tagline: "Which permits does your project need? Know before you start.",
+      price: 19,
       features: [
-        "Shareable review-ask page with QR code for the job site or the invoice",
-        "AI reply drafter in three tones, with service-recovery mode for bad reviews",
-        "14-day anti-nag protection so you never pester the same customer twice"
+        "Permit checker marks every permit Likely needed, Possibly needed, or Probably not — in plain language",
+        "Application pipeline: Not started → Applied → Approved, with document checklists per permit",
+        "Fee estimates with live project totals plus expiry reminders so permits never lapse"
       ]
     },
     {
-      slug: "socialspark-ai",
-      name: "SocialSpark AI",
-      tagline: "One finished job becomes a week of social posts.",
-      price: 19,
+      slug: "safetycheck-ai",
+      name: "SafetyCheck AI",
+      tagline: "Job-site safety checklists and incident logging that crews actually use.",
+      price: 15,
       features: [
-        "Describe one job and get seven themed posts — reveal, behind-the-scenes, pro tip, more",
-        "Three tones per post with trade-specific hashtags and best-time-to-post guidance",
-        "Copy-to-clipboard and mark-as-posted tracking for the whole week"
+        "Trade-specific daily and weekly checklists plus a PPE checklist to tick off while gearing up",
+        "Rotating 52-week toolbox-talk generator — a fresh 5-minute topic every week",
+        "Incident log with severity stats and one-click CSV export"
+      ]
+    },
+    {
+      slug: "fleetlog-ai",
+      name: "FleetLog AI",
+      tagline: "The fleet log: vehicles, maintenance and mileage in one notebook.",
+      price: 15,
+      features: [
+        "Vehicle and equipment log with fuel tracking and automatic per-fill-up MPG",
+        "Maintenance schedules with overdue and due-soon alerts so oil changes never slip",
+        "True cost-per-mile calculator plus chronological service history per vehicle"
+      ]
+    },
+    {
+      slug: "sitevisit-ai",
+      name: "SiteVisit AI",
+      tagline: "Site visit reports: photos, notes and follow-ups.",
+      price: 15,
+      features: [
+        "Structured visit form — client, address, trade, observations, photo notes",
+        "One click turns the visit into a quote draft, a punch list, and dated follow-ups",
+        "Every visit saved with its work product; printable summary for the office"
       ]
     }
   ];
 
-  // The 5-stage pipeline. invoicepilot-ai honestly owns two stages
-  // (bill it + get paid via dunning), so it appears twice.
+  // The 6-stage field-ops pipeline — one stage per product, in job order.
   var STAGES = [
-    { n: 1, title: "Win the job", product: "quotely-ai", blurb: "A fast, professional quote wins the work before the competition calls back." },
-    { n: 2, title: "Bill it", product: "invoicepilot-ai", blurb: "The won quote becomes a clean invoice in one click." },
-    { n: 3, title: "Get paid", product: "invoicepilot-ai", blurb: "Polite, escalating reminders chase late payers so you don't have to." },
-    { n: 4, title: "Get reviewed", product: "reviewpilot-ai", blurb: "Right after the paid invoice, ask for the review while the job is fresh." },
-    { n: 5, title: "Get discovered", product: "socialspark-ai", blurb: "Show the finished work all week — the next customer finds you." }
+    { n: 1, title: "Quote it", product: "quotely-ai", blurb: "A fast, professional quote wins the work before the competition calls back." },
+    { n: 2, title: "List the materials", product: "materiallist-ai", blurb: "The quoted job becomes a store-ready materials list — quantities and costs, nothing forgotten." },
+    { n: 3, title: "Pull the permits", product: "permitpilot-ai", blurb: "Know exactly which permits the job needs and track every application, inspection and approval." },
+    { n: 4, title: "Keep the crew safe", product: "safetycheck-ai", blurb: "Daily checklists, toolbox talks and incident logging keep the crew — and the business — protected." },
+    { n: 5, title: "Keep the trucks rolling", product: "fleetlog-ai", blurb: "Vehicles, maintenance and mileage in one fleet log, so no rig misses its service." },
+    { n: 6, title: "Document the visit", product: "sitevisit-ai", blurb: "Photos, notes and follow-ups from every site visit — saved, printed, and ready to quote from." }
   ];
 
-  var BUNDLE_PRICE = 59;
+  var BUNDLE_PRICE = 79;
 
   function productUrl(slug) { return "https://github.com/alexwboles/" + slug; }
   function separateTotal() { return PRODUCTS.reduce(function (s, p) { return s + p.price; }, 0); }

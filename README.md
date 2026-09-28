@@ -1,19 +1,21 @@
-# Trades Growth Stack — trades-hub
+# Trades Field-Ops Stack — trades-hub
 
-One honest pipeline for tradespeople: **Win the job → Bill it → Get paid → Get reviewed → Get discovered.**
+One honest pipeline for tradespeople: **run the job right** — quote it, stock it, permit it, keep the crew safe, keep the trucks rolling, document the visit.
 
-Four independent AI micro-products that genuinely belong together — each earns its keep alone, and together they compound:
+Six independent AI micro-products that genuinely belong together — each earns its keep alone, and together they cover the whole job:
 
 | Step | Product | What it does | Price idea |
 |------|---------|--------------|------------|
-| 1. Quote | [quotely-ai](https://github.com/alexwboles/quotely-ai) | Describe the job, get a professional quote in seconds | $24/mo |
-| 2–3. Invoice + get paid | [invoicepilot-ai](https://github.com/alexwboles/invoicepilot-ai) | Invoicing plus polite late-payment nudges | $19/mo |
-| 4. Reviews | [reviewpilot-ai](https://github.com/alexwboles/reviewpilot-ai) | Review ask page + QR + AI reply drafter | $29/mo |
-| 5. Discovery | [socialspark-ai](https://github.com/alexwboles/socialspark-ai) | One job photo → a week of social posts | $19/mo |
+| 1. Quote it | [quotely-ai](https://github.com/alexwboles/quotely-ai) | Describe the job, get a professional quote in seconds | $24/mo |
+| 2. List the materials | [materiallist-ai](https://github.com/alexwboles/materiallist-ai) | Materials list builder: job materials with quantities and costs | $19/mo |
+| 3. Pull the permits | [permitpilot-ai](https://github.com/alexwboles/permitpilot-ai) | Permit tracker: applications, inspections and approvals | $19/mo |
+| 4. Keep the crew safe | [safetycheck-ai](https://github.com/alexwboles/safetycheck-ai) | Job-site safety checklists and incident logging | $15/mo |
+| 5. Keep the trucks rolling | [fleetlog-ai](https://github.com/alexwboles/fleetlog-ai) | Fleet log: vehicles, maintenance and mileage | $15/mo |
+| 6. Document the visit | [sitevisit-ai](https://github.com/alexwboles/sitevisit-ai) | Site visit reports: photos, notes and follow-ups | $15/mo |
 
-**The connections:** a won quote in Quotely becomes an invoice in InvoicePilot; a paid invoice triggers the ReviewPilot ask; a 5-star review plus a job photo feeds SocialSpark; new followers become new Quotely quotes. The flywheel spins.
+**The connections:** a won quote in Quotely becomes a takeoff in MaterialList; the specced job gets its permits checked in PermitPilot before work starts; approved permits mean the crew rolls out under SafetyCheck checklists and toolbox talks; safe crews ride safe trucks under FleetLog's maintenance watch; you document the job on site with SiteVisit; and SiteVisit's quote draft feeds the next Quotely quote. The flywheel spins.
 
-**Bundle math:** $24 + $19 + $29 + $19 = $91/mo separately → **$59/mo as the Trades Growth Stack** (pricing idea; each tool is sold independently today).
+**Bundle math:** $24 + $19 + $19 + $15 + $15 + $15 = $107/mo separately → **$79/mo as the Trades Field-Ops Stack** (pricing idea; each tool is sold independently today).
 
 ## Run it
 
