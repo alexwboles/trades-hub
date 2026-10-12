@@ -66,6 +66,34 @@ const last=d.STAGES[d.STAGES.length-1].product, first=d.STAGES[0].product;
 if(chain[last]!==first) throw new Error('flywheel does not loop');
 " && ok "pipeline handoffs form a connected flywheel" || bad "pipeline handoffs broken"
 
+# Flow 7: jobChecklist — 6 stages, each with a real product and 3 action items
+node -e "
+const d=require('./js/data.js');
+const c=d.jobChecklist();
+if(c.length!==6) throw new Error('stages: '+c.length);
+c.forEach(e=>{
+  if(!e.product||!e.product.slug) throw new Error('stage '+e.stage+' missing product');
+  if(!Array.isArray(e.items)||e.items.length!==3) throw new Error('stage '+e.stage+' items');
+  e.items.forEach(it=>{ if(typeof it!=='string'||!it.length) throw new Error('empty item'); });
+});
+const titles=c.map(e=>e.title).join('|');
+if(titles!=='Quote it|List the materials|Pull the permits|Keep the crew safe|Keep the trucks rolling|Document the visit') throw new Error('titles');
+" && ok "jobChecklist: 6 stages x 3 action items" || bad "jobChecklist wrong"
+
+# Flow 8: quotePlan — stack quote honest both ways
+node -e "
+const d=require('./js/data.js');
+const all=d.PRODUCTS.map(p=>p.slug);
+const q1=d.quotePlan(all);
+if(q1.count!==6||q1.separate!==107) throw new Error('all: '+JSON.stringify(q1));
+if(q1.bundleApplies!==true||q1.effective!==79||q1.savings!==28) throw new Error('bundle win');
+const q2=d.quotePlan(['safetycheck-ai','fleetlog-ai']);
+if(q2.bundleApplies!==false||q2.effective!==30||q2.savings!==0) throw new Error('separate win');
+const q3=d.quotePlan(['quotely-ai','quotely-ai','nope']);
+if(q3.count!==1||q3.separate!==24) throw new Error('dedupe');
+if(d.quotePlan([]).count!==0) throw new Error('empty');
+" && ok "quotePlan: stack wins on all-six, loses on two cheap picks" || bad "quotePlan wrong"
+
 echo "---"
 echo "e2e: $PASS passed, $FAIL failed"
 [ "$FAIL" -eq 0 ]

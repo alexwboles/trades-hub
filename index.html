@@ -18,8 +18,19 @@
 <main id="app">
   <section id="pipeline-section" aria-label="The pipeline">
     <h2>The pipeline</h2>
-    <p class="section-sub">Each stage hands off to the next. Click any stage to open the tool behind it.</p>
+    <p class="section-sub">Each stage hands off to the next. Click any stage for the details.</p>
     <div id="pipeline" class="pipeline"></div>
+    <div id="stage-detail" class="stage-detail" aria-live="polite"></div>
+  </section>
+
+  <section id="checklist-section" aria-label="Job checklist">
+    <h2>Run the job right — the checklist</h2>
+    <p class="section-sub">Every stage of the pipeline, as tick-off steps for a real job. Check them off as you go, print it for the truck.</p>
+    <div class="checklist-actions">
+      <button id="reset-checklist" class="btn btn-ghost" type="button">Reset checklist</button>
+      <button id="print-checklist" class="btn" type="button">Print checklist</button>
+    </div>
+    <div id="checklist" class="checklist"></div>
   </section>
 
   <section id="products-section" aria-label="The tools">
@@ -56,6 +67,13 @@
         <p>The visit's quote draft feeds straight back into Quotely — and the next job runs through the whole stack again.</p>
       </div>
     </div>
+  </section>
+
+  <section id="builder" aria-label="Build your stack">
+    <h2>Build your stack</h2>
+    <p class="section-sub">Check the tools you'd actually buy. The hub quotes you against the Field-Ops Stack price — honestly, including when the stack loses.</p>
+    <div id="pick-list" class="pick-list"></div>
+    <div id="quote" class="quote" aria-live="polite"></div>
   </section>
 
   <section id="bundle" aria-label="Bundle pricing">

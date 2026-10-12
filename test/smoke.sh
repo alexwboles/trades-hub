@@ -63,6 +63,11 @@ if(badStages.length){console.error(JSON.stringify(badStages));process.exit(1);}
 grep -q 'src="js/data.js"' index.html && grep -q 'src="js/app.js"' index.html \
   && ok "index.html wires both scripts" || bad "index.html missing script tags"
 
+# 18+: new interactive sections present
+for id in stage-detail checklist-section checklist reset-checklist print-checklist builder pick-list quote; do
+  grep -q "id=\"$id\"" index.html && ok "index.html has #$id" || bad "index.html missing #$id"
+done
+
 echo "---"
 echo "smoke: $PASS passed, $FAIL failed"
 [ "$FAIL" -eq 0 ]

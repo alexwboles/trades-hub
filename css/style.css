@@ -142,3 +142,47 @@ footer {
 @media (max-width: 640px) {
   .stage-arrow { display: none; }
 }
+
+/* --- interactive pipeline detail ------------------------------------------ */
+button.stage { font: inherit; text-align: left; cursor: pointer; }
+.stage.active { border: 2px solid var(--accent); }
+.stage-detail {
+  margin-top: 1rem; background: var(--card); border: 2px solid var(--accent);
+  padding: 1.2rem 1.4rem;
+}
+.stage-detail-head { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.4rem; }
+.stage-detail-head h3 { margin: 0; }
+.stage-detail-tool, .stage-detail-next { color: var(--muted); }
+.stage-detail .btn { display: inline-block; margin-top: 0.6rem; }
+
+/* --- job checklist ---------------------------------------------------------- */
+.checklist-actions { display: flex; gap: 0.6rem; margin-bottom: 1rem; }
+.btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+.checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+.check-stage { background: var(--card); border: 1px solid var(--line); padding: 1rem 1.2rem; }
+.check-stage h3 { margin-top: 0; display: flex; align-items: center; gap: 0.5rem; }
+.check-items { list-style: none; margin: 0; padding: 0; }
+.check-item label { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.45rem 0; cursor: pointer; font-size: 0.95rem; }
+.check-item input { width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; accent-color: var(--accent); flex-shrink: 0; }
+.check-item.done span { text-decoration: line-through; color: var(--muted); }
+
+/* --- build-your-stack -------------------------------------------------------- */
+.pick-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin-bottom: 1.1rem; }
+.pick {
+  display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.8rem;
+  border: 1px solid var(--line); background: var(--card); cursor: pointer; font-size: 0.95rem;
+}
+.pick input { width: 1.05rem; height: 1.05rem; accent-color: var(--accent); }
+.pick-price { margin-left: auto; color: var(--muted); font-size: 0.85rem; }
+.quote { border: 2px solid var(--line); background: var(--card); padding: 1.1rem 1.3rem; }
+.quote-line { font-size: 1rem; margin-bottom: 0.35rem; }
+.quote-verdict { font-size: 1rem; font-weight: 600; margin-top: 0.7rem; }
+.quote-verdict.bundle-wins { color: var(--accent); }
+
+@media print {
+  header.hero, #pipeline-section, #products-section, #connections, #builder, #bundle, footer, .checklist-actions { display: none !important; }
+  .checklist { grid-template-columns: 1fr 1fr; }
+  .check-item input { display: none; }
+  .check-item label::before { content: "☐ "; }
+  .check-item.done label::before { content: "☑ "; }
+}

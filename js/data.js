@@ -94,6 +94,56 @@
     return null;
   }
 
+  /* --- Job checklist --------------------------------------------------------
+   * Actionable steps per pipeline stage — the "run every job right" list.
+   */
+  var CHECKLIST = [
+    { stage: 1, items: ["Describe the job in plain English and generate the quote", "Review line items, tax and deposit math", "Send the branded quote and set a follow-up reminder"] },
+    { stage: 2, items: ["Turn the won quote into a materials takeoff", "Check waste factors and quantities against your measurements", "Print the supply-run checklist and stock the job"] },
+    { stage: 3, items: ["Run the permit checker for the project type", "File applications early — track Not started → Applied → Approved", "Confirm fee totals and set expiry reminders"] },
+    { stage: 4, items: ["Run the daily safety checklist and PPE walk-through", "Deliver this week's 5-minute toolbox talk", "Log any incidents the same day"] },
+    { stage: 5, items: ["Confirm the assigned rig's maintenance is current", "Log fuel and check per-fill-up MPG", "Clear any overdue service flags before rolling out"] },
+    { stage: 6, items: ["Capture photos, observations and client notes on site", "Generate the quote draft / punch list / follow-ups", "File the visit report and schedule the next follow-up"] }
+  ];
+
+  function jobChecklist() {
+    return STAGES.map(function (st) {
+      var entry = { stage: st.n, title: st.title, product: productBySlug(st.product), items: [] };
+      for (var i = 0; i < CHECKLIST.length; i++) {
+        if (CHECKLIST[i].stage === st.n) { entry.items = CHECKLIST[i].items; break; }
+      }
+      return entry;
+    });
+  }
+
+  /* --- Build-your-stack quote ------------------------------------------------
+   * Pick any subset; the quote tells you whether the Field-Ops Stack ($79/mo)
+   * beats buying your picks separately. Honest both ways.
+   */
+  function quotePlan(slugs) {
+    var picks = [];
+    var seen = {};
+    (slugs || []).forEach(function (slug) {
+      var p = productBySlug(slug);
+      if (p && !seen[slug]) { seen[slug] = true; picks.push(p); }
+    });
+    var separate = picks.reduce(function (s, p) { return s + p.price; }, 0);
+    var stackCheaper = separate > BUNDLE_PRICE;
+    return {
+      picks: picks.map(function (p) { return p.slug; }),
+      count: picks.length,
+      separate: separate,
+      effective: stackCheaper ? BUNDLE_PRICE : separate,
+      bundleApplies: stackCheaper,
+      savings: stackCheaper ? separate - BUNDLE_PRICE : 0,
+      verdict: picks.length === 0
+        ? "Pick at least one tool to see your quote."
+        : stackCheaper
+          ? "Take the Field-Ops Stack — all six for $79/mo beats your picks by $" + (separate - BUNDLE_PRICE) + "/mo."
+          : "Buy your picks separately for $" + separate + "/mo — the stack only wins when your picks total more than $79."
+    };
+  }
+
   return {
     PRODUCTS: PRODUCTS,
     STAGES: STAGES,
@@ -101,6 +151,8 @@
     productUrl: productUrl,
     separateTotal: separateTotal,
     bundleSavings: bundleSavings,
-    productBySlug: productBySlug
+    productBySlug: productBySlug,
+    jobChecklist: jobChecklist,
+    quotePlan: quotePlan
   };
 });
