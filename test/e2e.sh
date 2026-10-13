@@ -97,3 +97,39 @@ if(d.quotePlan([]).count!==0) throw new Error('empty');
 echo "---"
 echo "e2e: $PASS passed, $FAIL failed"
 [ "$FAIL" -eq 0 ]
+
+# Flow 5: recommender — headaches map to the right tools, pipeline order kept
+node -e "
+const d=require('./js/data.js');
+const r=d.recommend({headaches:['quotes','permits'],size:'solo',trade:''});
+if(JSON.stringify(r)!=='[\"quotely-ai\",\"permitpilot-ai\"]') throw new Error('headaches: '+r);
+const r2=d.recommend({headaches:[],size:'big',trade:'roofing'});
+if(r2.indexOf('safetycheck-ai')===-1||r2.indexOf('fleetlog-ai')===-1) throw new Error('big crew: '+r2);
+const r3=d.recommend({headaches:['nonsense'],size:'solo',trade:'nonsense'});
+if(r3.length!==0) throw new Error('unknown inputs should give nothing: '+r3);
+const r4=d.recommend(null);
+if(!Array.isArray(r4)||r4.length!==0) throw new Error('null answers should give []');
+" && ok "recommend maps headaches/trade/size" || bad "recommend broken"
+
+# Flow 6: estimator math — 12 jobs x 7.0 hrs at $75/hr
+node -e "
+const d=require('./js/data.js');
+if(d.hoursSavedPerJob()!==7) throw new Error('per-job hours '+d.hoursSavedPerJob());
+const s=d.estimateSavings(12,75);
+if(s.hoursSaved!==84||s.value!==6300) throw new Error(JSON.stringify(s));
+const z=d.estimateSavings(0,75);
+if(z.hoursSaved!==0||z.value!==0) throw new Error('zero jobs should be zero');
+const n=d.estimateSavings(-5,'abc');
+if(n.jobsPerMonth!==0||n.hourlyRate!==0) throw new Error('bad input should clamp to 0');
+" && ok "estimateSavings math + clamping" || bad "estimateSavings broken"
+
+# Flow 7: trade + headache label tables cover the maps
+node -e "
+const d=require('./js/data.js');
+const r=d.recommend({headaches:Object.keys(d.HEADACHE_LABELS),size:'solo',trade:''});
+if(r.length!==6) throw new Error('all headaches should cover all 6 tools: '+r);
+for(const t of Object.keys(d.TRADE_LABELS)){
+  const rr=d.recommend({headaches:[],size:'solo',trade:t});
+  if(!rr.length) throw new Error('trade '+t+' recommends nothing');
+}
+" && ok "label tables + trade map complete" || bad "label/trade maps incomplete"

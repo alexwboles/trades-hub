@@ -71,3 +71,17 @@ done
 echo "---"
 echo "smoke: $PASS passed, $FAIL failed"
 [ "$FAIL" -eq 0 ]
+
+# 19+: recommender + estimator markup present
+for id in finder finder-form headache-opts trade-sel finder-result estimator est-jobs est-rate est-result; do
+  grep -q "id=\"$id\"" index.html && ok "index.html has #$id" || bad "index.html missing #$id"
+done
+
+# 20+: new data functions exported
+node -e "
+const d=require('./js/data.js');
+for(const f of ['recommend','estimateSavings','hoursSavedPerJob']) if(typeof d[f]!=='function') throw new Error(f);
+" && ok "new data functions exported" || bad "new data functions missing"
+
+# 21: app.js wires the copy-quote button
+grep -q "copy-quote" js/app.js && ok "app.js wires copy-quote" || bad "copy-quote missing in app.js"

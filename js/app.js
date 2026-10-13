@@ -181,6 +181,122 @@
     } else {
       box.appendChild(el("p", "quote-verdict", q.verdict));
     }
+    // copy quote summary to clipboard
+    var copyBtn = el("button", "btn btn-ghost copy-quote", "Copy quote summary");
+    copyBtn.type = "button";
+    copyBtn.addEventListener("click", function () { copyQuote(q); });
+    box.appendChild(copyBtn);
+  }
+  function copyQuote(q) {
+    var lines = ["Trades Field-Ops Stack quote"];
+    q.picks.forEach(function (slug) {
+      var p = D.productBySlug(slug);
+      lines.push("- " + p.name + " ($" + p.price + "/mo)");
+    });
+    lines.push("Separately: $" + q.separate + "/mo");
+    if (q.bundleApplies) {
+      lines.push("Field-Ops Stack: $" + D.BUNDLE_PRICE + "/mo (you save $" + q.savings + "/mo)");
+    }
+    lines.push(q.verdict);
+    var text = lines.join("\n");
+    function done(btn) {
+      btn.textContent = "Copied";
+      setTimeout(function () { btn.textContent = "Copy quote summary"; }, 1500);
+    }
+    var btn = document.querySelector(".copy-quote");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(btn); }, function () { done(btn); });
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) { /* clipboard unavailable */ }
+      document.body.removeChild(ta);
+      done(btn);
+    }
   }
   renderBuilder();
+
+  // --- stack recommender: which tools do I need? ---
+  var finderForm = document.getElementById("finder-form");
+  if (finderForm) {
+    var optsWrap = document.getElementById("headache-opts");
+    Object.keys(D.HEADACHE_LABELS).forEach(function (key) {
+      var label = document.createElement("label");
+      label.className = "opt";
+      var box = document.createElement("input");
+      box.type = "checkbox";
+      box.value = key;
+      label.appendChild(box);
+      label.appendChild(document.createTextNode(" " + D.HEADACHE_LABELS[key]));
+      optsWrap.appendChild(label);
+    });
+    var tradeSel = document.getElementById("trade-sel");
+    var none = document.createElement("option");
+    none.value = "";
+    none.textContent = "Choose a trade…";
+    tradeSel.appendChild(none);
+    Object.keys(D.TRADE_LABELS).forEach(function (key) {
+      var o = document.createElement("option");
+      o.value = key;
+      o.textContent = D.TRADE_LABELS[key];
+      tradeSel.appendChild(o);
+    });
+    finderForm.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var headaches = Array.prototype.map.call(
+        optsWrap.querySelectorAll("input[type=checkbox]:checked"),
+        function (b) { return b.value; }
+      );
+      var size = finderForm.querySelector("input[name=size]:checked");
+      var picks = D.recommend({
+        headaches: headaches,
+        size: size ? size.value : "solo",
+        trade: tradeSel.value
+      });
+      var res = document.getElementById("finder-result");
+      res.innerHTML = "";
+      if (!picks.length) {
+        res.appendChild(el("p", "finder-empty", "Nothing matched — tick at least one headache above and try again."));
+        return;
+      }
+      var names = picks.map(function (s) { return D.productBySlug(s).name; });
+      res.appendChild(el("p", "finder-verdict",
+        "Start with <strong>" + names.length + " tool" + (names.length > 1 ? "s" : "") + "</strong>: " +
+        esc(names.join(", ")) + "."));
+      var apply = el("button", "btn", "Load these into the quote builder");
+      apply.type = "button";
+      apply.addEventListener("click", function () {
+        var boxes = document.querySelectorAll("#pick-list input[type=checkbox]");
+        Array.prototype.forEach.call(boxes, function (b) {
+          b.checked = picks.indexOf(b.value) !== -1;
+        });
+        renderQuote();
+        document.getElementById("builder").scrollIntoView({ behavior: "smooth" });
+      });
+      res.appendChild(apply);
+    });
+  }
+
+  // --- savings estimator ---
+  var estJobs = document.getElementById("est-jobs");
+  var estRate = document.getElementById("est-rate");
+  var estResult = document.getElementById("est-result");
+  if (estJobs && estRate && estResult) {
+    function renderEstimate() {
+      var s = D.estimateSavings(estJobs.value, estRate.value);
+      if (s.jobsPerMonth <= 0) {
+        estResult.textContent = "Enter your jobs per month to see the math.";
+        return;
+      }
+      estResult.innerHTML =
+        "The stack gives back about <strong>" + s.hoursSaved + " admin hours a month</strong>" +
+        " — worth roughly <strong>$" + s.value.toLocaleString("en-US") + "</strong> at $" + s.hourlyRate + "/hr. " +
+        "The Field-Ops Stack costs <strong>$" + D.BUNDLE_PRICE + "/mo</strong>.";
+    }
+    estJobs.addEventListener("input", renderEstimate);
+    estRate.addEventListener("input", renderEstimate);
+    renderEstimate();
+  }
 })();

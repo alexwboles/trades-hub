@@ -186,3 +186,32 @@ button.stage { font: inherit; text-align: left; cursor: pointer; }
   .check-item label::before { content: "☐ "; }
   .check-item.done label::before { content: "☑ "; }
 }
+
+/* --- stack recommender -------------------------------------------------------- */
+#finder-form fieldset {
+  border: 1px solid var(--line); background: var(--card);
+  padding: 1rem 1.2rem; margin: 0 0 1rem;
+}
+#finder-form legend { font-weight: 700; padding: 0 0.4rem; }
+.opt-grid, .opt-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.opt-grid .opt, .opt-row .opt {
+  border: 1px solid var(--line); padding: 0.5rem 0.8rem; cursor: pointer;
+  font-size: 0.92rem; display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.opt-grid .opt input, .opt-row .opt input { accent-color: var(--accent); }
+.trade-sel { font: inherit; padding: 0.55rem 0.8rem; border: 1px solid var(--line); background: #fff; min-width: 220px; }
+.finder-result { margin-top: 1.1rem; background: var(--card); border: 2px solid var(--accent); padding: 1.1rem 1.3rem; }
+.finder-result:empty { display: none; }
+.finder-verdict { font-size: 1.05rem; margin: 0 0 0.9rem; }
+.finder-empty { margin: 0; color: var(--muted); }
+
+/* --- savings estimator ---------------------------------------------------------- */
+.est-inputs { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.est-field { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; font-size: 0.95rem; }
+.est-field input {
+  font: inherit; font-weight: 400; padding: 0.55rem 0.8rem;
+  border: 1px solid var(--line); width: 12rem;
+}
+.est-result { background: var(--card); border-left: 4px solid var(--accent); padding: 1rem 1.2rem; font-size: 1.02rem; }
+
+.copy-quote { margin-top: 0.9rem; }

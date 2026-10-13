@@ -144,6 +144,79 @@
     };
   }
 
+  /* --- Time savings estimator ----------------------------------------------
+   * Conservative admin-hours each tool saves per job. Used to estimate the
+   * stack's monthly payoff from jobs/month and the owner's hourly rate.
+   */
+  var HOURS_SAVED_PER_JOB = {
+    "quotely-ai": 1.5,
+    "materiallist-ai": 1.0,
+    "permitpilot-ai": 2.0,
+    "safetycheck-ai": 0.75,
+    "fleetlog-ai": 0.5,
+    "sitevisit-ai": 1.25
+  };
+  function hoursSavedPerJob() {
+    return PRODUCTS.reduce(function (s, p) { return s + (HOURS_SAVED_PER_JOB[p.slug] || 0); }, 0);
+  }
+  function estimateSavings(jobsPerMonth, hourlyRate) {
+    jobsPerMonth = Math.max(0, +jobsPerMonth || 0);
+    hourlyRate = Math.max(0, +hourlyRate || 0);
+    var perJob = hoursSavedPerJob();
+    var hours = jobsPerMonth * perJob;
+    return {
+      jobsPerMonth: jobsPerMonth,
+      hourlyRate: hourlyRate,
+      hoursPerJob: perJob,
+      hoursSaved: Math.round(hours * 10) / 10,
+      value: Math.round(hours * hourlyRate * 100) / 100
+    };
+  }
+
+  /* --- Stack recommender ("which tools do I need?") -------------------------
+   * answers: { headaches: [ids], size: "solo"|"crew"|"big", trade: id }
+   * Returns the recommended product slugs, deduped, in pipeline order.
+   */
+  var HEADACHE_MAP = {
+    "quotes": "quotely-ai",
+    "materials": "materiallist-ai",
+    "permits": "permitpilot-ai",
+    "safety": "safetycheck-ai",
+    "fleet": "fleetlog-ai",
+    "followups": "sitevisit-ai"
+  };
+  var TRADE_MAP = {
+    "roofing": ["safetycheck-ai", "quotely-ai"],
+    "landscaping": ["fleetlog-ai", "quotely-ai"],
+    "electrical": ["permitpilot-ai", "quotely-ai"],
+    "plumbing": ["permitpilot-ai", "quotely-ai"],
+    "hvac": ["permitpilot-ai", "materiallist-ai"],
+    "general": ["quotely-ai", "materiallist-ai", "permitpilot-ai"],
+    "cleaning": ["quotely-ai", "sitevisit-ai"]
+  };
+  var TRADE_LABELS = {
+    "roofing": "Roofing", "landscaping": "Landscaping", "electrical": "Electrical",
+    "plumbing": "Plumbing", "hvac": "HVAC", "general": "General contracting", "cleaning": "Cleaning"
+  };
+  var HEADACHE_LABELS = {
+    "quotes": "Winning quotes and quote paperwork",
+    "materials": "Supply runs and materials takeoffs",
+    "permits": "Permit paperwork",
+    "safety": "Safety compliance and incidents",
+    "fleet": "Truck maintenance and fuel",
+    "followups": "Lost follow-ups and repeat clients"
+  };
+  function recommend(answers) {
+    answers = answers || {};
+    var wanted = {};
+    function add(slug) { wanted[slug] = true; }
+    (answers.headaches || []).forEach(function (h) { if (HEADACHE_MAP[h]) add(HEADACHE_MAP[h]); });
+    if (TRADE_MAP[answers.trade]) TRADE_MAP[answers.trade].forEach(add);
+    if (answers.size === "big") { add("safetycheck-ai"); add("fleetlog-ai"); }
+    else if (answers.size === "crew") { add("fleetlog-ai"); }
+    return PRODUCTS.filter(function (p) { return wanted[p.slug]; }).map(function (p) { return p.slug; });
+  }
+
   return {
     PRODUCTS: PRODUCTS,
     STAGES: STAGES,
@@ -153,6 +226,11 @@
     bundleSavings: bundleSavings,
     productBySlug: productBySlug,
     jobChecklist: jobChecklist,
-    quotePlan: quotePlan
+    quotePlan: quotePlan,
+    HEADACHE_LABELS: HEADACHE_LABELS,
+    TRADE_LABELS: TRADE_LABELS,
+    hoursSavedPerJob: hoursSavedPerJob,
+    estimateSavings: estimateSavings,
+    recommend: recommend
   };
 });

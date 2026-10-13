@@ -69,11 +69,46 @@
     </div>
   </section>
 
+  <section id="finder" aria-label="Which tools do I need">
+    <h2>Which tools do you need?</h2>
+    <p class="section-sub">Answer three quick questions — the hub picks your stack and loads it into the quote builder below.</p>
+    <form id="finder-form">
+      <fieldset>
+        <legend>What&rsquo;s eating your week? (pick any)</legend>
+        <div id="headache-opts" class="opt-grid"></div>
+      </fieldset>
+      <fieldset>
+        <legend>How big is your operation?</legend>
+        <div class="opt-row">
+          <label class="opt"><input type="radio" name="size" value="solo" checked> Solo operator</label>
+          <label class="opt"><input type="radio" name="size" value="crew"> Small crew (2&ndash;9)</label>
+          <label class="opt"><input type="radio" name="size" value="big"> Big crew (10+)</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>What&rsquo;s your trade?</legend>
+        <select id="trade-sel" class="trade-sel"></select>
+      </fieldset>
+      <button class="btn btn-big" type="submit">Recommend my stack</button>
+    </form>
+    <div id="finder-result" class="finder-result" aria-live="polite"></div>
+  </section>
+
   <section id="builder" aria-label="Build your stack">
     <h2>Build your stack</h2>
     <p class="section-sub">Check the tools you'd actually buy. The hub quotes you against the Field-Ops Stack price — honestly, including when the stack loses.</p>
     <div id="pick-list" class="pick-list"></div>
     <div id="quote" class="quote" aria-live="polite"></div>
+  </section>
+
+  <section id="estimator" aria-label="Savings estimator">
+    <h2>Is the stack worth it?</h2>
+    <p class="section-sub">Rough math on the admin hours the stack gives back each month. Your numbers stay in your browser.</p>
+    <div class="est-inputs">
+      <label class="est-field">Jobs per month <input id="est-jobs" type="number" min="0" step="1" value="12"></label>
+      <label class="est-field">Your time is worth ($/hr) <input id="est-rate" type="number" min="0" step="1" value="75"></label>
+    </div>
+    <div id="est-result" class="est-result" aria-live="polite"></div>
   </section>
 
   <section id="bundle" aria-label="Bundle pricing">
