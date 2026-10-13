@@ -8,85 +8,100 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header class="hero">
-  <p class="kicker">The Trades Field-Ops Stack</p>
-  <h1>Quote it &rarr; Stock it &rarr; Permit it &rarr; Keep the crew safe &rarr; Keep the trucks rolling &rarr; Document the visit</h1>
-  <p class="lede">Six independent AI tools that fit together into one field-ops pipeline for tradespeople — plumbers, electricians, roofers, landscapers, cleaners. Use any one on its own, or run the whole stack and run every job right, from first quote to final follow-up.</p>
-  <a class="btn btn-big" href="#pipeline">See how it flows</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="wordmark" href="./"><span class="wordmark-plate" aria-hidden="true">T</span>Field-Ops Stack</a>
+    <p class="topbar-meta">6 tools · 6 stages · <strong>$79/mo</strong> for the stack</p>
+  </div>
 </header>
 
-<main id="app">
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">The trades field-ops stack</p>
+    <h1>Run the job right,<br>from first quote to final follow-up.</h1>
+    <p class="lede">Six independent AI tools that fit together into one field-ops pipeline for tradespeople — plumbers, electricians, roofers, landscapers, cleaners. Use any one on its own, or run the whole stack.</p>
+    <div class="hero-stats">
+      <div class="hstat"><b>6</b><span>stages</span></div>
+      <div class="hstat"><b>6</b><span>tools</span></div>
+      <div class="hstat"><b>$28</b><span>saved /mo on the stack</span></div>
+    </div>
+    <a class="btn btn-big" href="#pipeline-section">See how it flows ↓</a>
+  </div>
+</section>
+
+<main id="app" class="wrap">
   <section id="pipeline-section" aria-label="The pipeline">
-    <h2>The pipeline</h2>
-    <p class="section-sub">Each stage hands off to the next. Click any stage for the details.</p>
+    <div class="sec-head">
+      <p class="sec-kicker">The job board</p>
+      <h2>The pipeline</h2>
+      <p class="section-sub">Each stage hands off to the next. Click any stage for the work order.</p>
+    </div>
     <div id="pipeline" class="pipeline"></div>
-    <div id="stage-detail" class="stage-detail" aria-live="polite"></div>
+    <div id="stage-detail" class="workorder" aria-live="polite"></div>
   </section>
 
   <section id="checklist-section" aria-label="Job checklist">
-    <h2>Run the job right — the checklist</h2>
-    <p class="section-sub">Every stage of the pipeline, as tick-off steps for a real job. Check them off as you go, print it for the truck.</p>
-    <div class="checklist-actions">
-      <button id="reset-checklist" class="btn btn-ghost" type="button">Reset checklist</button>
-      <button id="print-checklist" class="btn" type="button">Print checklist</button>
+    <div class="sec-head">
+      <p class="sec-kicker">Punch list</p>
+      <h2>Run the job right — the checklist</h2>
+      <p class="section-sub">Every stage of the pipeline, as tick-off steps for a real job. Check them off as you go, print it for the truck.</p>
+    </div>
+    <div class="checklist-bar">
+      <div class="checklist-progress" id="checklist-progress" aria-live="polite"></div>
+      <div class="checklist-actions">
+        <button id="reset-checklist" class="btn btn-ghost" type="button">Reset</button>
+        <button id="print-checklist" class="btn" type="button">Print for the truck</button>
+      </div>
     </div>
     <div id="checklist" class="checklist"></div>
   </section>
 
   <section id="products-section" aria-label="The tools">
-    <h2>The six tools</h2>
-    <p class="section-sub">Independent products. Each one earns its keep alone — together they run the job right.</p>
+    <div class="sec-head">
+      <p class="sec-kicker">The crew</p>
+      <h2>The six tools</h2>
+      <p class="section-sub">Independent products. Each one earns its keep alone — together they run the job right.</p>
+    </div>
     <div id="products" class="product-grid"></div>
   </section>
 
   <section id="connections" aria-label="How they connect">
-    <h2>How they connect</h2>
+    <div class="sec-head">
+      <p class="sec-kicker">Handoffs</p>
+      <h2>How they connect</h2>
+    </div>
     <div class="conn-grid">
-      <div class="conn">
-        <h3>Quotely &rarr; MaterialList</h3>
-        <p>Win the quote in Quotely and turn it into a takeoff in MaterialList — line items become quantities and costs, so nothing gets forgotten at the supply house.</p>
-      </div>
-      <div class="conn">
-        <h3>MaterialList &rarr; PermitPilot</h3>
-        <p>With the job specced and stocked, check PermitPilot before work starts — know exactly which permits you need and get the applications in early.</p>
-      </div>
-      <div class="conn">
-        <h3>PermitPilot &rarr; SafetyCheck</h3>
-        <p>Permits approved means work begins. SafetyCheck has the trade's daily checklist, the PPE walk-through, and the toolbox talk ready for the crew.</p>
-      </div>
-      <div class="conn">
-        <h3>SafetyCheck &rarr; FleetLog</h3>
-        <p>A safe crew needs safe trucks. FleetLog keeps the rigs serviced and road-ready — overdue maintenance flags before it strands someone on the highway.</p>
-      </div>
-      <div class="conn">
-        <h3>FleetLog &rarr; SiteVisit</h3>
-        <p>Roll up to the site and document it in SiteVisit — photos, notes, and follow-ups captured while the details are fresh.</p>
-      </div>
-      <div class="conn">
-        <h3>SiteVisit &rarr; Quotely</h3>
-        <p>The visit's quote draft feeds straight back into Quotely — and the next job runs through the whole stack again.</p>
-      </div>
+      <div class="conn"><p class="conn-route">Quotely → MaterialList</p><p>Win the quote in Quotely and turn it into a takeoff in MaterialList — line items become quantities and costs, so nothing gets forgotten at the supply house.</p></div>
+      <div class="conn"><p class="conn-route">MaterialList → PermitPilot</p><p>With the job specced and stocked, check PermitPilot before work starts — know exactly which permits you need and get the applications in early.</p></div>
+      <div class="conn"><p class="conn-route">PermitPilot → SafetyCheck</p><p>Permits approved means work begins. SafetyCheck has the trade's daily checklist, the PPE walk-through, and the toolbox talk ready for the crew.</p></div>
+      <div class="conn"><p class="conn-route">SafetyCheck → FleetLog</p><p>A safe crew needs safe trucks. FleetLog keeps the rigs serviced and road-ready — overdue maintenance flags before it strands someone on the highway.</p></div>
+      <div class="conn"><p class="conn-route">FleetLog → SiteVisit</p><p>Roll up to the site and document it in SiteVisit — photos, notes, and follow-ups captured while the details are fresh.</p></div>
+      <div class="conn conn-flywheel"><p class="conn-route">SiteVisit → Quotely ↺</p><p>The visit's quote draft feeds straight back into Quotely — and the next job runs through the whole stack again.</p></div>
     </div>
   </section>
 
-  <section id="finder" aria-label="Which tools do I need">
-    <h2>Which tools do you need?</h2>
-    <p class="section-sub">Answer three quick questions — the hub picks your stack and loads it into the quote builder below.</p>
+  <section id="finder" class="panel" aria-label="Which tools do I need">
+    <div class="sec-head">
+      <p class="sec-kicker">Intake</p>
+      <h2>Which tools do you need?</h2>
+      <p class="section-sub">Answer three quick questions — the hub picks your stack and loads it into the quote builder below.</p>
+    </div>
     <form id="finder-form">
       <fieldset>
-        <legend>What&rsquo;s eating your week? (pick any)</legend>
+        <legend>What's eating your week? (pick any)</legend>
         <div id="headache-opts" class="opt-grid"></div>
       </fieldset>
       <fieldset>
         <legend>How big is your operation?</legend>
         <div class="opt-row">
           <label class="opt"><input type="radio" name="size" value="solo" checked> Solo operator</label>
-          <label class="opt"><input type="radio" name="size" value="crew"> Small crew (2&ndash;9)</label>
+          <label class="opt"><input type="radio" name="size" value="crew"> Small crew (2–9)</label>
           <label class="opt"><input type="radio" name="size" value="big"> Big crew (10+)</label>
         </div>
       </fieldset>
       <fieldset>
-        <legend>What&rsquo;s your trade?</legend>
+        <legend>What's your trade?</legend>
         <select id="trade-sel" class="trade-sel"></select>
       </fieldset>
       <button class="btn btn-big" type="submit">Recommend my stack</button>
@@ -95,15 +110,25 @@
   </section>
 
   <section id="builder" aria-label="Build your stack">
-    <h2>Build your stack</h2>
-    <p class="section-sub">Check the tools you'd actually buy. The hub quotes you against the Field-Ops Stack price — honestly, including when the stack loses.</p>
-    <div id="pick-list" class="pick-list"></div>
-    <div id="quote" class="quote" aria-live="polite"></div>
+    <div class="sec-head">
+      <p class="sec-kicker">Quote board</p>
+      <h2>Build your stack</h2>
+      <p class="section-sub">Check the tools you'd actually buy. The hub quotes you against the Field-Ops Stack price — honestly, including when the stack loses.</p>
+    </div>
+    <div class="builder-grid">
+      <div id="pick-list" class="pick-list"></div>
+      <div class="quote-panel">
+        <div id="quote" class="quote" aria-live="polite"></div>
+      </div>
+    </div>
   </section>
 
-  <section id="estimator" aria-label="Savings estimator">
-    <h2>Is the stack worth it?</h2>
-    <p class="section-sub">Rough math on the admin hours the stack gives back each month. Your numbers stay in your browser.</p>
+  <section id="estimator" class="panel" aria-label="Savings estimator">
+    <div class="sec-head">
+      <p class="sec-kicker">Bid math</p>
+      <h2>Is the stack worth it?</h2>
+      <p class="section-sub">Rough math on the admin hours the stack gives back each month. Your numbers stay in your browser.</p>
+    </div>
     <div class="est-inputs">
       <label class="est-field">Jobs per month <input id="est-jobs" type="number" min="0" step="1" value="12"></label>
       <label class="est-field">Your time is worth ($/hr) <input id="est-rate" type="number" min="0" step="1" value="75"></label>
@@ -112,14 +137,19 @@
   </section>
 
   <section id="bundle" aria-label="Bundle pricing">
-    <h2>One stack, one price</h2>
+    <div class="sec-head">
+      <p class="sec-kicker">One stack, one price</p>
+      <h2>The bundle</h2>
+    </div>
     <div id="bundle-math" class="bundle-box"></div>
     <p class="fine">Each tool is sold and supported independently. The bundle is a pricing idea for the future — today every repo is free and open.</p>
   </section>
 </main>
 
 <footer>
-  <p>Trades Field-Ops Stack &mdash; an independent product portfolio &middot; <span id="year"></span></p>
+  <div class="wrap">
+    <p>Trades Field-Ops Stack — an independent product portfolio · <span id="year"></span></p>
+  </div>
 </footer>
 
 <script src="js/data.js"></script>

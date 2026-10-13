@@ -27,12 +27,14 @@
     var p = D.productBySlug(st.product);
     var next = D.STAGES[n % D.STAGES.length]; // flywheel: stage 6 feeds stage 1
     detail.innerHTML =
-      '<div class="stage-detail-head"><span class="stage-num">' + st.n + "</span>" +
-      "<h3>Stage " + st.n + ": " + esc(st.title) + "</h3></div>" +
+      '<p class="workorder-kicker">Work order — stage ' + st.n + " of 6</p>" +
+      "<h3>" + esc(st.title) + "</h3>" +
       "<p>" + esc(st.blurb) + "</p>" +
-      '<p class="stage-detail-tool">Powered by <strong>' + esc(p.name) + "</strong> — " + esc(p.tagline) + "</p>" +
-      '<p class="stage-detail-next">Hands off to: <strong>' + esc(next.title) + "</strong> (stage " + next.n + ")</p>" +
-      '<a class="btn" href="' + D.productUrl(st.product) + '" target="_blank" rel="noopener">View ' + esc(p.name) + " on GitHub</a>";
+      '<div class="workorder-meta">' +
+        '<div class="wo-item"><b>The crew</b><span>' + esc(p.name) + " — " + esc(p.tagline) + "</span></div>" +
+        '<div class="wo-item"><b>Hands off to</b><span>' + esc(next.title) + " (stage " + next.n + ")</span></div>" +
+        '<div class="wo-item"><b>Repo</b><a href="' + D.productUrl(st.product) + '" target="_blank" rel="noopener">View ' + esc(p.name) + " on GitHub</a></div>" +
+      "</div>";
     var stages = pipe.querySelectorAll(".stage");
     Array.prototype.forEach.call(stages, function (s, i) {
       if (s.classList) s.classList.toggle("active", i === n - 1);
@@ -45,33 +47,27 @@
     card.type = "button";
     card.setAttribute("aria-label", "Stage " + st.n + ": " + st.title + " — show details");
     card.innerHTML =
-      '<span class="stage-num">' + st.n + "</span>" +
+      '<span class="stage-num">Stage ' + st.n + "</span>" +
       '<span class="stage-title">' + esc(st.title) + "</span>" +
-      '<span class="stage-blurb">' + esc(st.blurb) + "</span>" +
-      '<span class="stage-tool">powered by ' + esc(p.name) + "</span>";
+      '<span class="stage-tool">' + esc(p.name) + "</span>";
     card.addEventListener("click", function () { renderStageDetail(st.n); });
     pipe.appendChild(card);
-    if (i < D.STAGES.length - 1) {
-      var arrow = el("span", "stage-arrow", "&#8594;");
-      arrow.setAttribute("aria-hidden", "true");
-      pipe.appendChild(arrow);
-    }
   });
   renderStageDetail(1);
 
   // --- product cards ---
   var grid = document.getElementById("products");
   D.PRODUCTS.forEach(function (p, i) {
-    var card = el("article", "product", "");
+    var card = el("article", "product-card", "");
     var feats = p.features.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("");
     card.innerHTML =
-      '<div class="product-step">Step ' + (i + 1) + " of 6</div>" +
+      '<p class="product-step">Step ' + (i + 1) + " of 6</p>" +
       "<h3>" + esc(p.name) + "</h3>" +
-      '<p class="tagline">' + esc(p.tagline) + "</p>" +
-      "<ul>" + feats + "</ul>" +
+      '<p class="product-tagline">' + esc(p.tagline) + "</p>" +
+      '<ul class="product-features">' + feats + "</ul>" +
       '<div class="product-foot">' +
-        '<span class="price">$' + p.price + "/mo</span>" +
-        '<a class="btn" href="' + D.productUrl(p.slug) + '" target="_blank" rel="noopener">View on GitHub</a>' +
+        '<span class="product-price">$' + p.price + "/mo</span>" +
+        '<a class="product-link" href="' + D.productUrl(p.slug) + '" target="_blank" rel="noopener">View on GitHub &rarr;</a>' +
       "</div>";
     grid.appendChild(card);
   });
@@ -80,11 +76,11 @@
   var total = D.separateTotal();
   var box = document.getElementById("bundle-math");
   box.innerHTML =
-    "<p>Separately: " +
+    '<div class="bundle-row"><span>Separately <em style="font-style:normal;display:block;font-size:.8rem;color:var(--muted)">' +
     D.PRODUCTS.map(function (p) { return esc(p.name) + " $" + p.price; }).join(" + ") +
-    " = <strong>$" + total + "/mo</strong></p>" +
-    '<p>As the <strong>Trades Field-Ops Stack</strong>: <strong>$' + D.BUNDLE_PRICE + "/mo</strong> " +
-    "— you save <strong>$" + D.bundleSavings() + "/mo</strong> and everything works as one pipeline.</p>";
+    "</em></span><strong>$" + total + "/mo</strong></div>" +
+    '<div class="bundle-row bundle-total"><span>As the Trades Field-Ops Stack</span><strong>$' + D.BUNDLE_PRICE + "/mo</strong></div>" +
+    '<div class="bundle-save">You save $' + D.bundleSavings() + "/mo</div>";
 
   // --- year ---
   document.getElementById("year").textContent = new Date().getFullYear();
@@ -102,36 +98,57 @@
   }
   var checkedMap = loadChecked();
 
+  function checklistTotals() {
+    var done = 0, all = 0;
+    D.jobChecklist().forEach(function (entry) {
+      entry.items.forEach(function (item, idx) {
+        all++;
+        if (checkedMap[entry.stage + ":" + idx]) done++;
+      });
+    });
+    return { done: done, all: all };
+  }
+  function renderChecklistProgress() {
+    var prog = document.getElementById("checklist-progress");
+    if (!prog) return;
+    var t = checklistTotals();
+    var pct = t.all ? Math.round((t.done / t.all) * 100) : 0;
+    prog.innerHTML = "Punch list: " + t.done + " of " + t.all + " done" +
+      '<span class="bar"><i style="width:' + pct + '%"></i></span>';
+  }
   function renderChecklist() {
     var wrap = document.getElementById("checklist");
     wrap.innerHTML = "";
     D.jobChecklist().forEach(function (entry) {
-      var block = el("div", "check-stage", "");
-      block.innerHTML = '<h3><span class="stage-num">' + entry.stage + "</span> " + esc(entry.title) + "</h3>";
-      var ul = el("ul", "check-items", "");
+      var block = el("div", "check-group", "");
+      block.innerHTML = '<h3 class="check-group-title"><span class="stage-num">Stage ' + entry.stage + "</span> " + esc(entry.title) + "</h3>";
       entry.items.forEach(function (item, idx) {
         var key = entry.stage + ":" + idx;
-        var li = el("li", "check-item", "");
-        var label = document.createElement("label");
+        var label = el("label", "check-item", "");
         var box = document.createElement("input");
         box.type = "checkbox";
         box.checked = !!checkedMap[key];
+        var stageTag = document.createElement("span");
+        stageTag.className = "check-stage";
+        stageTag.textContent = "S" + entry.stage;
+        var span = document.createElement("span");
+        span.className = "check-label";
+        span.textContent = item;
+        label.appendChild(box);
+        label.appendChild(stageTag);
+        label.appendChild(span);
+        if (box.checked) label.classList.add("done");
         box.addEventListener("change", function () {
           checkedMap[key] = box.checked;
           saveChecked(checkedMap);
-          li.classList.toggle("done", box.checked);
+          label.classList.toggle("done", box.checked);
+          renderChecklistProgress();
         });
-        var span = document.createElement("span");
-        span.textContent = item;
-        label.appendChild(box);
-        label.appendChild(span);
-        li.appendChild(label);
-        if (box.checked) li.classList.add("done");
-        ul.appendChild(li);
+        block.appendChild(label);
       });
-      block.appendChild(ul);
       wrap.appendChild(block);
     });
+    renderChecklistProgress();
   }
   renderChecklist();
 
@@ -182,7 +199,7 @@
       box.appendChild(el("p", "quote-verdict", q.verdict));
     }
     // copy quote summary to clipboard
-    var copyBtn = el("button", "btn btn-ghost copy-quote", "Copy quote summary");
+    var copyBtn = el("button", "copy-quote-btn copy-quote", "Copy quote summary");
     copyBtn.type = "button";
     copyBtn.addEventListener("click", function () { copyQuote(q); });
     box.appendChild(copyBtn);
@@ -290,10 +307,13 @@
         estResult.textContent = "Enter your jobs per month to see the math.";
         return;
       }
+      var verdict = s.value >= D.BUNDLE_PRICE
+        ? '<span class="est-good">Pays for itself ' + Math.round(s.value / D.BUNDLE_PRICE * 10) / 10 + "x over.</span>"
+        : "Not yet at these numbers — try more jobs or a higher rate.";
       estResult.innerHTML =
         "The stack gives back about <strong>" + s.hoursSaved + " admin hours a month</strong>" +
         " — worth roughly <strong>$" + s.value.toLocaleString("en-US") + "</strong> at $" + s.hourlyRate + "/hr. " +
-        "The Field-Ops Stack costs <strong>$" + D.BUNDLE_PRICE + "/mo</strong>.";
+        "The Field-Ops Stack costs <strong>$" + D.BUNDLE_PRICE + "/mo</strong>.<br>" + verdict;
     }
     estJobs.addEventListener("input", renderEstimate);
     estRate.addEventListener("input", renderEstimate);
